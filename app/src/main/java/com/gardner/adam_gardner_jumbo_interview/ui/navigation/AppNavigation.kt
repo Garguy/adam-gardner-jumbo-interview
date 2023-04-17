@@ -12,6 +12,7 @@ import com.gardner.adam_gardner_jumbo_interview.data.product.ProductViewModel
 import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
 import com.gardner.adam_gardner_jumbo_interview.ui.screens.product_details.ProductDetailsScreen
 import com.gardner.adam_gardner_jumbo_interview.ui.screens.product_list.ProductListScreen
+import com.gardner.adam_gardner_jumbo_interview.ui.screens.welcome.WelcomeScreen
 
 @Composable
 fun AppNavigation(
@@ -20,8 +21,15 @@ fun AppNavigation(
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = "productList"
+        startDestination = "welcome"
     ) {
+        composable("welcome") {
+            WelcomeScreen(
+                onGetStartedPress = {
+                    navController.navigate("productList")
+                }
+            )
+        }
         composable("productList") {
             ProductListScreen(
                 viewModel = viewModel,
