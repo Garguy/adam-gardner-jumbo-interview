@@ -1,5 +1,6 @@
 package com.gardner.adam_gardner_jumbo_interview.ui.screens.product_list
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,9 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import com.gardner.adam_gardner_jumbo_interview.R
 import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,14 +43,21 @@ fun ProductListItem(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
+            SubcomposeAsyncImage(
                 model = product.imageInfo.primaryView.firstOrNull()?.url,
                 contentDescription = product.title,
                 modifier = Modifier
                     .size(96.dp)
                     .padding(16.dp)
                     .aspectRatio(1f),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                loading = { CircularProgressIndicator() },
+                error = {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                        contentDescription = "An error occurred loading image"
+                    )
+                }
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
