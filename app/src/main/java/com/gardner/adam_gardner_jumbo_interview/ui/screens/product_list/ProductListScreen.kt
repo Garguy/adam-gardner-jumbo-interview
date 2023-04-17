@@ -1,0 +1,75 @@
+package com.gardner.adam_gardner_jumbo_interview.ui.screens.product_list
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import com.gardner.adam_gardner_jumbo_interview.data.product.ProductViewModel
+import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
+import com.gardner.adam_gardner_jumbo_interview.utils.Resource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProductListScreen(
+    viewModel: ProductViewModel,
+    onItemClick: (Product) -> Unit
+) {
+    val products = viewModel.products.collectAsState()
+    
+    LaunchedEffect(true) {
+        withContext(Dispatchers.IO) {
+            viewModel.getProducts()
+        }
+    }
+    
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("Products") }) }
+    ) {
+        Box(modifier = Modifier.padding(it)) {
+            when (val results = products.value) {
+                is Resource.Success -> {
+                    LazyColumn {
+                        items(results.data) { product ->
+                            ProductListItem(product = product, onItemClick = onItemClick)
+                        }
+                    }
+                }
+                
+                is Resource.Loading -> {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    }
+                }
+                
+                is Resource.Error -> {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(
+                            text = results.message ?: "We're sorry, ¯\\_(ツ)_/¯",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
