@@ -1,12 +1,22 @@
 package com.gardner.adam_gardner_jumbo_interview.ui.screens.product_list
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.gardner.adam_gardner_jumbo_interview.data.product.ProductViewModel
 import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
 import com.gardner.adam_gardner_jumbo_interview.utils.Resource
@@ -26,7 +37,9 @@ import kotlinx.coroutines.withContext
 @Composable
 fun ProductListScreen(
     viewModel: ProductViewModel,
-    onItemClick: (Product) -> Unit
+    onItemClick: (Product) -> Unit,
+    onCartClick: () -> Unit,
+    navController: NavController
 ) {
     val products = viewModel.products.collectAsState()
     
@@ -37,7 +50,34 @@ fun ProductListScreen(
     }
     
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Products") }) }
+        topBar = {
+            TopAppBar(
+                title = { Text("Products") },
+                modifier = Modifier.background(MaterialTheme.colorScheme.primary)
+            )
+        },
+        bottomBar = {
+            BottomAppBar() {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    IconButton(onClick = { navController.navigate("productList") }) {
+                        Icon(
+                            imageVector = Icons.Filled.Home,
+                            contentDescription = "List"
+                        )
+                    }
+                    
+                    IconButton(onClick = { navController.navigate("cart") }) {
+                        Icon(
+                            imageVector = Icons.Filled.ShoppingCart,
+                            contentDescription = "Cart"
+                        )
+                    }
+                }
+            }
+        }
     ) {
         Box(modifier = Modifier.padding(it)) {
             when (val results = products.value) {

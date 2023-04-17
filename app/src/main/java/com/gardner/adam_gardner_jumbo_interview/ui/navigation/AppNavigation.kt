@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.gardner.adam_gardner_jumbo_interview.data.product.ProductViewModel
-import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
+import com.gardner.adam_gardner_jumbo_interview.ui.screens.cart.CartScreen
 import com.gardner.adam_gardner_jumbo_interview.ui.screens.product_details.ProductDetailsScreen
 import com.gardner.adam_gardner_jumbo_interview.ui.screens.product_list.ProductListScreen
 import com.gardner.adam_gardner_jumbo_interview.ui.screens.welcome.WelcomeScreen
@@ -37,7 +37,9 @@ fun AppNavigation(
                     navController.navigate("productDetails/${product.id}") {
                         launchSingleTop = true
                     }
-                }
+                },
+                onCartClick = { navController.navigate("cart") },
+                navController = navController
             )
         }
         composable(
@@ -58,6 +60,9 @@ fun AppNavigation(
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+        composable(route = "cart") {
+            CartScreen(navController = navController)
         }
     }
 }

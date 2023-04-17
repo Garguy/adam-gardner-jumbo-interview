@@ -53,7 +53,8 @@ fun ProductDetailsScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = null)
                     }
-                }
+                },
+                modifier = Modifier.background(MaterialTheme.colorScheme.primary)
             )
         }
     ) {
