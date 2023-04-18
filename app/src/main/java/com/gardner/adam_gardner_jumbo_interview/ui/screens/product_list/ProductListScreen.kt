@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,11 +30,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.gardner.adam_gardner_jumbo_interview.data.cart.CartItem
 import com.gardner.adam_gardner_jumbo_interview.data.cart.CartViewModel
 import com.gardner.adam_gardner_jumbo_interview.data.product.ProductViewModel
 import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
@@ -75,25 +74,31 @@ fun ProductListScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     IconButton(onClick = { navController.navigate("productList") }) {
-                        Icon(
-                            imageVector = Icons.Filled.Home,
-                            contentDescription = "List"
-                        )
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                imageVector = Icons.Filled.Home,
+                                contentDescription = "List"
+                            )
+                            Text(text = "LIST", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        }
                     }
                     
                     BadgedBox(badge = {
                         Text(
                             text = "${itemsInCart.size}",
-                            color = Color.Blue,
-                            fontSize = 22.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }) {
                         IconButton(onClick = { navController.navigate("cart") }) {
-                            Icon(
-                                imageVector = Icons.Filled.ShoppingCart,
-                                contentDescription = "Cart"
-                            )
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Icon(
+                                    imageVector = Icons.Filled.ShoppingCart,
+                                    contentDescription = "Cart"
+                                )
+                                Text(text = "CART", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            }
                         }
                     }
                 }

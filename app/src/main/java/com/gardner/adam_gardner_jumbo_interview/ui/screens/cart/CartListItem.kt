@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,9 +31,7 @@ import com.gardner.adam_gardner_jumbo_interview.data.cart.CartItem
 @Composable
 fun CartListItem(
     item: CartItem,
-    onRemoveItem: (CartItem) -> Unit,
-    onClearCart: () -> Unit,
-    index: Int
+    onRemoveItem: (CartItem) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -71,13 +68,10 @@ fun CartListItem(
                 modifier = Modifier.weight(1f, true)
             ) {
                 Text(text = item.product.title ?: "Unknown", fontWeight = FontWeight.Bold)
-                Text(text = item.product.prices.price.amount.toString())
+                Text(text = item.quantity.toString(), fontWeight = FontWeight.Bold)
             }
             IconButton(onClick = { onRemoveItem(item) }) {
                 Icon(Icons.Default.Delete, contentDescription = "Remove item")
-            }
-            IconButton(onClick = { onClearCart()}) {
-                Icon(Icons.Default.Clear, contentDescription = "Clear Cart")
             }
         }
     }
