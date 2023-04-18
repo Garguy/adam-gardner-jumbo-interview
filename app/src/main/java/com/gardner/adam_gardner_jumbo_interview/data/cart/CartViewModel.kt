@@ -11,15 +11,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
+    private val cartPreferences: CartPreferences
 ) : ViewModel() {
     
     private val _items = MutableStateFlow<List<CartItem>>(emptyList())
     val items: StateFlow<List<CartItem>> = _items
     
     init {
-        viewModelScope.launch {
-            _items.value = cartRepository.getItems()
+        val savedCart = cartPreferences.getCartList()
+        
+        if (savedCart.isNotEmpty()) {
+            _items.value = savedCart
+        } else {
+            viewModelScope.launch {
+                _items.value = cartRepository.getItems()
+                cartPreferences.saveCartList(_items.value)
+            }
         }
     }
     
