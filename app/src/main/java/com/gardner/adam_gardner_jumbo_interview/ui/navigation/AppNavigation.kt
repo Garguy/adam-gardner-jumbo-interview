@@ -1,5 +1,6 @@
 package com.gardner.adam_gardner_jumbo_interview.ui.navigation
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -64,6 +65,7 @@ fun AppNavigation(
             }
         }
         composable(route = "cart") {
+            Log.d("AppNav VM", "$cartViewModel")
             CartScreen(navController = navController, cartViewModel = cartViewModel)
         }
     }

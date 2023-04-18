@@ -47,10 +47,4 @@ class ProductViewModel @Inject constructor(
     fun getProductById(productId: String): Product? {
         return productById[productId]
     }
-    
-    fun addToCart(product: Product) {
-        viewModelScope.launch {
-            cartRepository.addItem(CartItem(product = product, quantity = 1))
-        }
-    }
 }

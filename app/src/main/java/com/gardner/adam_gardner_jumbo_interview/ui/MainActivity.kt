@@ -1,6 +1,7 @@
 package com.gardner.adam_gardner_jumbo_interview.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -22,7 +23,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AdamgardnerjumbointerviewTheme {
-                AppNavigation(productViewModel = productViewModel, cartViewModel = cartViewModel)
+                Log.d("Main Activity VM", "$cartViewModel")
+                AppNavigation(
+                    productViewModel = productViewModel,
+                    cartViewModel = cartViewModel
+                )
             }
         }
     }

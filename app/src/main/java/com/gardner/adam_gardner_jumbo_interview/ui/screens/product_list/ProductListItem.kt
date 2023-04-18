@@ -1,5 +1,6 @@
 package com.gardner.adam_gardner_jumbo_interview.ui.screens.product_list
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.gardner.adam_gardner_jumbo_interview.R
+import com.gardner.adam_gardner_jumbo_interview.data.cart.CartItem
 import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +35,7 @@ import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
 fun ProductListItem(
     product: Product,
     onItemClick: (Product) -> Unit,
-    onAddToCart: (Product) -> Unit
+    onAddToCart: (CartItem) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -77,8 +78,11 @@ fun ProductListItem(
                 Spacer(modifier = Modifier.height(4.dp))
                 
                 Button(
-                    onClick = { onAddToCart(product) },
-                    modifier = Modifier.align(CenterHorizontally)
+                    onClick = {
+                        Log.d("Button CLick", "Added Item from Button $product")
+                        onAddToCart(CartItem(product = product, quantity = 1))
+                    },
+                    modifier = Modifier.align(Alignment.End)
                 ) {
                     Text(text = "Add to cart")
                 }

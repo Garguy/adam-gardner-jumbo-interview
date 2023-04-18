@@ -1,8 +1,8 @@
 package com.gardner.adam_gardner_jumbo_interview.data.cart
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,24 +15,33 @@ class CartViewModel @Inject constructor(
 ) : ViewModel() {
     
     private val _items = MutableStateFlow<List<CartItem>>(emptyList())
-    val items: StateFlow<List<CartItem>>
-        get() = _items
+    val items: StateFlow<List<CartItem>> = _items
+    
+    init {
+        viewModelScope.launch {
+            _items.value = cartRepository.getItems()
+        }
+    }
     
     fun addItem(item: CartItem) {
+        Log.d("MV addItem", item.toString())
+        cartRepository.addItem(item)
         viewModelScope.launch {
-            cartRepository.addItem(item)
+            _items.value = cartRepository.getItems()
         }
     }
     
     fun removeItem(item: CartItem) {
         viewModelScope.launch {
             cartRepository.removeItem(item)
+            _items.value = cartRepository.getItems()
         }
     }
     
     fun clear() {
         viewModelScope.launch {
             cartRepository.clear()
+            _items.value = emptyList()
         }
     }
 }
