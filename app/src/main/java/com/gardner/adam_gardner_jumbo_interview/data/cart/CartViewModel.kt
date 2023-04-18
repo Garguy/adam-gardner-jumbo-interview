@@ -17,14 +17,21 @@ class CartViewModel @Inject constructor(
     private val _items = MutableStateFlow<List<CartItem>>(emptyList())
     val items: StateFlow<List<CartItem>> = _items
     
+    private val _itemCount = MutableStateFlow<Map<String, Int>>(emptyMap())
+    val itemCount: StateFlow<Map<String, Int>> = _itemCount
+    
     init {
         val savedCart = cartPreferences.getCartList()
         
         if (savedCart.isNotEmpty()) {
             _items.value = savedCart
+            _itemCount.value = savedCart.groupingBy { it.product.id }
+                .eachCount()
         } else {
             viewModelScope.launch {
                 _items.value = cartRepository.getItems()
+                _itemCount.value = _items.value.groupingBy { it.product.id }
+                    .eachCount()
                 cartPreferences.saveCartList(_items.value)
             }
         }
@@ -34,6 +41,8 @@ class CartViewModel @Inject constructor(
         cartRepository.addItem(item)
         viewModelScope.launch {
             _items.value = cartRepository.getItems()
+            _itemCount.value = _items.value.groupingBy { it.product.id }
+                .eachCount()
         }
     }
     
@@ -41,6 +50,8 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             cartRepository.removeItem(item)
             _items.value = cartRepository.getItems()
+            _itemCount.value = _items.value.groupingBy { it.product.id }
+                .eachCount()
         }
     }
     
@@ -48,6 +59,7 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             cartRepository.clear()
             _items.value = emptyList()
+            _itemCount.value = emptyMap()
         }
     }
 }

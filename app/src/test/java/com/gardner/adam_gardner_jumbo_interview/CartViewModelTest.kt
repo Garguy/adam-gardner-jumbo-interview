@@ -80,4 +80,23 @@ class CartViewModelTest {
         val result = viewModel.items.first()
         assertEquals(expectedList, result)
     }
+    
+    @Test
+    fun `test item count for display`() = runTest {
+        
+        val cartItems = listOf(
+            CartItem(mock(Product::class.java), 1),
+            CartItem(mock(Product::class.java), 2),
+            CartItem(mock(Product::class.java), 1)
+        )
+        
+        val cartPreferences = mock(CartPreferences::class.java)
+        `when`(cartPreferences.getCartList()).thenReturn(cartItems)
+        
+        val viewModel = CartViewModel(cartRepository, cartPreferences)
+        
+        val expected = mapOf(null to 3)
+        val itemCountForDisplay = viewModel.itemCount.value
+        assertEquals(expected, itemCountForDisplay)
+    }
 }

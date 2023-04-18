@@ -34,7 +34,8 @@ import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
 fun ProductListItem(
     product: Product,
     onItemClick: (Product) -> Unit,
-    onAddToCart: (CartItem) -> Unit
+    onAddToCart: (CartItem) -> Unit,
+    itemCount: Int = 0
 ) {
     Card(
         modifier = Modifier
@@ -72,9 +73,11 @@ fun ProductListItem(
                 
                 Spacer(modifier = Modifier.height(4.dp))
                 
-                Text(text = product.prices.price.amount.toString())
+                Text(text = "€${product.prices.price.amount}")
                 
                 Spacer(modifier = Modifier.height(4.dp))
+                
+                Text(text = "In cart: $itemCount", fontWeight = FontWeight.Bold)
                 
                 Button(
                     onClick = {

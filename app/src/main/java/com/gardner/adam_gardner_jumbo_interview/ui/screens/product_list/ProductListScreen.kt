@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -48,8 +49,15 @@ fun ProductListScreen(
     navController: NavController
 ) {
     val products = productViewModel.products.collectAsState()
-    
     val itemsInCart by cartViewModel.items.collectAsState()
+    
+    val itemCountMap = remember {
+        val map = mutableMapOf<String, Int>()
+        itemsInCart.forEach { cartItem ->
+            map[cartItem.product.id] = cartItem.quantity
+        }
+        map
+    }
     
     LaunchedEffect(true) {
         withContext(Dispatchers.IO) {
@@ -107,12 +115,14 @@ fun ProductListScreen(
                 is Resource.Success -> {
                     LazyColumn {
                         items(results.data) { product ->
+                            val itemCount = itemCountMap[product.id] ?: 0
                             ProductListItem(
                                 product = product,
                                 onItemClick = onItemClick,
                                 onAddToCart = { cartItem ->
                                     cartViewModel.addItem(cartItem)
-                                }
+                                },
+                                itemCount
                             )
                         }
                     }
