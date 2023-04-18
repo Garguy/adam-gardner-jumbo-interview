@@ -1,6 +1,5 @@
 package com.gardner.adam_gardner_jumbo_interview.data.cart
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,7 +31,6 @@ class CartViewModel @Inject constructor(
     }
     
     fun addItem(item: CartItem) {
-        Log.d("MV addItem", item.toString())
         cartRepository.addItem(item)
         viewModelScope.launch {
             _items.value = cartRepository.getItems()

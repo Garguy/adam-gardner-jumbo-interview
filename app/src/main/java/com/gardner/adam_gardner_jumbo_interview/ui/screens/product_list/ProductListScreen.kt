@@ -1,6 +1,5 @@
 package com.gardner.adam_gardner_jumbo_interview.ui.screens.product_list
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,8 +48,6 @@ fun ProductListScreen(
     navController: NavController
 ) {
     val products = productViewModel.products.collectAsState()
-    
-    Log.d("ProductList VM", "$cartViewModel")
     
     val itemsInCart by cartViewModel.items.collectAsState()
     

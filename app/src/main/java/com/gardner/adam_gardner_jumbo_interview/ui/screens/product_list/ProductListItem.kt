@@ -1,6 +1,5 @@
 package com.gardner.adam_gardner_jumbo_interview.ui.screens.product_list
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -79,7 +78,6 @@ fun ProductListItem(
                 
                 Button(
                     onClick = {
-                        Log.d("Button CLick", "Added Item from Button $product")
                         onAddToCart(CartItem(product = product, quantity = 1))
                     },
                     modifier = Modifier.align(Alignment.End)
