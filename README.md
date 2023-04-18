@@ -4,7 +4,7 @@ The Grocery List App is a simple Android application that allows users see a set
 
 ## Features
 
-- App loads initally list of prodcuts
+- App loads list of prodcuts when the button on welcome screen is pressed. 
 - Add items to your cart. 
 - Remove individual items from your cart, clear your whole cart. Your app maintains its Cart state even if you kill the app.
 
