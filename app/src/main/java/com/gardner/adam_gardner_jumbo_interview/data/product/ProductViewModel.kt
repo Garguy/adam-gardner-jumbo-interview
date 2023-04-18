@@ -2,6 +2,8 @@ package com.gardner.adam_gardner_jumbo_interview.data.product
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gardner.adam_gardner_jumbo_interview.data.cart.CartItem
+import com.gardner.adam_gardner_jumbo_interview.data.cart.CartRepository
 import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
 import com.gardner.adam_gardner_jumbo_interview.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductViewModel @Inject constructor(
-    private val repository: ProductRepository
+    private val repository: ProductRepository,
+    private val cartRepository: CartRepository
 ) : ViewModel() {
     
     private val _products = MutableStateFlow<Resource<List<Product>>>(Resource.Loading)
@@ -43,5 +46,11 @@ class ProductViewModel @Inject constructor(
     
     fun getProductById(productId: String): Product? {
         return productById[productId]
+    }
+    
+    fun addToCart(product: Product) {
+        viewModelScope.launch {
+            cartRepository.addItem(CartItem(product = product, quantity = 1))
+        }
     }
 }

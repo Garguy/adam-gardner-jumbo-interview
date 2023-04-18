@@ -1,9 +1,13 @@
 package com.gardner.adam_gardner_jumbo_interview.ui.screens.cart
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -15,20 +19,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.gardner.adam_gardner_jumbo_interview.data.cart.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
-    navController: NavController
-//    cart: Cart,
-//    onItemRemoved: (Product) -> Unit
+    navController: NavController,
+    cartViewModel: CartViewModel
 ) {
+    
+    val itemsInCart by cartViewModel.items.collectAsState()
+    
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Cart") }
+                title = { Text("My Cart") }
             )
         },
         bottomBar = {
@@ -54,68 +65,30 @@ fun CartScreen(
             }
         }
     ) { innerPadding ->
-//        LazyColumn(contentPadding = innerPadding) {
-//            items(cart.items) { item ->
-//                CartItem(
-//                    item = item,
-//                    onRemoveClick = { onItemRemoved(item.product) }
-//                )
-//            }
-//
-//            item {
-//                Text(
-//                    text = "Total: ${cart.totalPrice.formatAsCurrency()}",
-//                    style = MaterialTheme.typography.h6,
-//                    modifier = Modifier.padding(16.dp)
-//                )
-//            }
-//        }
-        
-        Text(text = "Cart Screen", modifier = Modifier.padding(innerPadding))
+        if (itemsInCart.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                itemsIndexed(itemsInCart) { index, item ->
+                    CartListItem(
+                        item = item,
+                        onRemoveItem = { cartViewModel.removeItem(item) },
+                        onClearCart = { cartViewModel.clear() },
+                        index = index
+                    )
+                }
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "Your cart is empty")
+            }
+        }
     }
 }
-
-//@Composable
-//fun CartItem(item: CartItem, onRemoveClick: () -> Unit) {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(16.dp),
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        Image(
-//            painter = rememberImagePainter(item.product.image),
-//            contentDescription = null,
-//            modifier = Modifier.size(80.dp)
-//        )
-//
-//        Column(modifier = Modifier.padding(start = 16.dp)) {
-//            Text(
-//                text = item.product.title,
-//                style = MaterialTheme.typography.h6
-//            )
-//
-//            Text(
-//                text = item.quantity.toString(),
-//                style = MaterialTheme.typography.body1
-//            )
-//
-//            Text(
-//                text = item.totalPrice.formatAsCurrency(),
-//                style = MaterialTheme.typography.body1
-//            )
-//        }
-//
-//        Spacer(modifier = Modifier.weight(1f))
-//
-//        IconButton(
-//            onClick = onRemoveClick,
-//            modifier = Modifier.padding(16.dp)
-//        ) {
-//            Icon(
-//                imageVector = Icons.Filled.Delete,
-//                contentDescription = "Remove item"
-//            )
-//        }
-//    }
-//}

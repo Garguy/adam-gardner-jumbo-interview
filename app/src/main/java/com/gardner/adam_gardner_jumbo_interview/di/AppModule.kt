@@ -1,5 +1,7 @@
 package com.gardner.adam_gardner_jumbo_interview.di
 
+import com.gardner.adam_gardner_jumbo_interview.data.cart.CartRepository
+import com.gardner.adam_gardner_jumbo_interview.data.cart.CartRepositoryImpl
 import com.gardner.adam_gardner_jumbo_interview.data.product.ProductDataSource
 import com.gardner.adam_gardner_jumbo_interview.data.remote.ProductApi
 import com.gardner.adam_gardner_jumbo_interview.data.product.ProductRepository
@@ -40,5 +42,10 @@ class AppModule {
     @Provides
     fun provideProductRepository(dataSource: ProductDataSource): ProductRepository {
         return ProductRepositoryImpl(dataSource)
+    }
+    
+    @Provides
+    fun provideCartRepository() : CartRepository {
+        return CartRepositoryImpl()
     }
 }

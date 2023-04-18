@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.gardner.adam_gardner_jumbo_interview.data.cart.CartViewModel
 import com.gardner.adam_gardner_jumbo_interview.data.product.ProductViewModel
 import com.gardner.adam_gardner_jumbo_interview.ui.screens.cart.CartScreen
 import com.gardner.adam_gardner_jumbo_interview.ui.screens.product_details.ProductDetailsScreen
@@ -16,7 +17,8 @@ import com.gardner.adam_gardner_jumbo_interview.ui.screens.welcome.WelcomeScreen
 
 @Composable
 fun AppNavigation(
-    viewModel: ProductViewModel
+    productViewModel: ProductViewModel,
+    cartViewModel: CartViewModel
 ) {
     val navController = rememberNavController()
     NavHost(
@@ -32,13 +34,13 @@ fun AppNavigation(
         }
         composable("productList") {
             ProductListScreen(
-                viewModel = viewModel,
+                productViewModel = productViewModel,
+                cartViewModel = cartViewModel,
                 onItemClick = { product ->
                     navController.navigate("productDetails/${product.id}") {
                         launchSingleTop = true
                     }
                 },
-                onCartClick = { navController.navigate("cart") },
                 navController = navController
             )
         }
@@ -50,7 +52,7 @@ fun AppNavigation(
             if (productId != null) {
                 ProductDetailsScreen(
                     productId = productId,
-                    viewModel = viewModel,
+                    viewModel = productViewModel,
                     navController = navController
                 )
             } else {
@@ -62,7 +64,7 @@ fun AppNavigation(
             }
         }
         composable(route = "cart") {
-            CartScreen(navController = navController)
+            CartScreen(navController = navController, cartViewModel = cartViewModel)
         }
     }
 }

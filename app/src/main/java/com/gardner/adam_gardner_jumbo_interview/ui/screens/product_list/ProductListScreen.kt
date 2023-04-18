@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,9 +25,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.gardner.adam_gardner_jumbo_interview.data.cart.CartItem
+import com.gardner.adam_gardner_jumbo_interview.data.cart.CartViewModel
 import com.gardner.adam_gardner_jumbo_interview.data.product.ProductViewModel
 import com.gardner.adam_gardner_jumbo_interview.data.remote.dto.Product
 import com.gardner.adam_gardner_jumbo_interview.utils.Resource
@@ -36,23 +43,25 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
-    viewModel: ProductViewModel,
+    productViewModel: ProductViewModel,
+    cartViewModel: CartViewModel,
     onItemClick: (Product) -> Unit,
-    onCartClick: () -> Unit,
     navController: NavController
 ) {
-    val products = viewModel.products.collectAsState()
+    val products = productViewModel.products.collectAsState()
+    
+    val itemsInCart by cartViewModel.items.collectAsState()
     
     LaunchedEffect(true) {
         withContext(Dispatchers.IO) {
-            viewModel.getProducts()
+            productViewModel.getProducts()
         }
     }
     
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Products") },
+                title = { Text("Product List") },
                 modifier = Modifier.background(MaterialTheme.colorScheme.primary)
             )
         },
@@ -69,11 +78,20 @@ fun ProductListScreen(
                         )
                     }
                     
-                    IconButton(onClick = { navController.navigate("cart") }) {
-                        Icon(
-                            imageVector = Icons.Filled.ShoppingCart,
-                            contentDescription = "Cart"
+                    BadgedBox(badge = {
+                        Text(
+                            text = "${itemsInCart.size}",
+                            color = Color.Blue,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold
                         )
+                    }) {
+                        IconButton(onClick = { navController.navigate("cart") }) {
+                            Icon(
+                                imageVector = Icons.Filled.ShoppingCart,
+                                contentDescription = "Cart"
+                            )
+                        }
                     }
                 }
             }
@@ -84,7 +102,18 @@ fun ProductListScreen(
                 is Resource.Success -> {
                     LazyColumn {
                         items(results.data) { product ->
-                            ProductListItem(product = product, onItemClick = onItemClick)
+                            ProductListItem(
+                                product = product,
+                                onItemClick = onItemClick,
+                                onAddToCart = {
+                                    cartViewModel.addItem(
+                                        CartItem(
+                                            product = product,
+                                            quantity = 1
+                                        )
+                                    )
+                                }
+                            )
                         }
                     }
                 }
